@@ -2,22 +2,27 @@ import React from "react";
 import Users from "./components/users";
 import NavBar from "./components/navBar";
 import { Route, Switch } from "react-router-dom";
-import UsersNav from "./components/layouts/usersNav";
 import Login from "./components/layouts/login";
 import Main from "./components/layouts/main";
-import UsersTable from "./components/usersTable";
+import userApi from "./api/fake.api/user.api";
 
 function App() {
     return (
         <div>
             <NavBar />
             <Switch>
-                <Route path="/users" component={UsersNav} />
-                <Route path="/users" render={() => <UsersTable />} />
+                <Route
+                    path="/users"
+                    render={(props) => <Users users={userApi} {...props} />}
+                />
+                <Route
+                    path="/users/:user._id"
+                    render={(props) => <Users users={userApi} {...props} />}
+                />
                 <Route path="/login" component={Login} />
                 <Route path="/" component={Main} />
             </Switch>
-            <Users />
+            {/* <Users /> */}
         </div>
     );
 }
