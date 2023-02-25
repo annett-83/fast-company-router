@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import api from "../api";
 import PropTypes from "prop-types";
 
-const SearchByName = () => {
+const SearchByName = ({ userId, value, onChange, type }) => {
     const [name, setName] = useState();
     useEffect(() => {
-        api.users.getById(name).then((data) => setName(data));
+        api.users.getById(userId).then((data) => setName(data));
     });
-    const handleNameChanch = (e) => {
-        setName(e.target.value);
-        console.log(e.target.value);
+    const handleNameChanch = (userId) => {
+        setName(userId.target.value);
+        console.log(userId.target.value);
     };
     return (
         <div className="form-outline mb-4">
             <input
                 type="text"
                 className="form-control"
-                id="name"
+                name="name"
                 placeholder="Search..."
                 value={name}
                 onChange={handleNameChanch}
@@ -28,12 +28,11 @@ SearchByName.defultProps = {
     types: "text"
 };
 SearchByName.propTypes = {
-    label: PropTypes.string,
     type: PropTypes.string,
     value: PropTypes.string,
     onChange: PropTypes.func,
     name: PropTypes.string,
-    error: PropTypes.string
+    userId: PropTypes.string
 };
 
 export default SearchByName;
