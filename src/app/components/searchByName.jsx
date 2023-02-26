@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from "react";
-import api from "../api";
+import React from "react";
 import PropTypes from "prop-types";
 
-const SearchByName = ({ userId, value, onChange, type }) => {
-    const [name, setName] = useState();
-    useEffect(() => {
-        api.users.getById(userId).then((data) => setName(data));
-    });
-    const handleNameChanch = (userId) => {
-        setName(userId.target.value);
-        console.log(userId.target.value);
+const SearchByName = ({ onChange, search }) => {
+    const handleTextChange = (e) => {
+        onChange(e.target.value);
+        console.log(e);
     };
     return (
         <div className="form-outline mb-4">
@@ -18,8 +13,8 @@ const SearchByName = ({ userId, value, onChange, type }) => {
                 className="form-control"
                 name="name"
                 placeholder="Search..."
-                value={name}
-                onChange={handleNameChanch}
+                value={search}
+                onChange={handleTextChange}
             />
         </div>
     );
@@ -28,11 +23,8 @@ SearchByName.defultProps = {
     types: "text"
 };
 SearchByName.propTypes = {
-    type: PropTypes.string,
-    value: PropTypes.string,
     onChange: PropTypes.func,
-    name: PropTypes.string,
-    userId: PropTypes.string
+    search: PropTypes.string
 };
 
 export default SearchByName;

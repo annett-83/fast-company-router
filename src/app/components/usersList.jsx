@@ -12,6 +12,7 @@ const Users = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
+    const [userNameSearch, setUserNameSearch] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 8;
 
@@ -19,6 +20,10 @@ const Users = () => {
     useEffect(() => {
         api.users.fetchAll().then((data) => setUsers(data));
     }, []);
+    const handeleUserSearchChange = (searchString) => {
+        setUserNameSearch(searchString);
+        setSelectedProf();
+    };
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
@@ -42,6 +47,7 @@ const Users = () => {
 
     const handleProfessionSelect = (item) => {
         setSelectedProf(item);
+        setUserNameSearch("");
     };
 
     const handlePageChange = (pageIndex) => {
@@ -50,13 +56,15 @@ const Users = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
-
     if (users) {
-        const filteredUsers = selectedProf
-            ? users.filter((user) =>
-                JSON.stringify(user.profession) ===
-                      JSON.stringify(selectedProf))
+        const searchedUsers = userNameSearch
+            ? users.filter((user) => user.name.toLowerCase().search(userNameSearch.toLowerCase()) >= 0)
             : users;
+        const filteredUsers = selectedProf
+            ? searchedUsers.filter((user) =>
+                JSON.stringify(user.profession) ===
+                JSON.stringify(selectedProf))
+            : searchedUsers;
 
         const count = filteredUsers.length;
         const sortedUsers = _.orderBy(
@@ -68,7 +76,6 @@ const Users = () => {
         const clearFilter = () => {
             setSelectedProf();
         };
-
         return (
             <div className="d-flex">
                 {professions && (
@@ -89,7 +96,7 @@ const Users = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
-                    <SearchByName />
+                    <SearchByName onChange={handeleUserSearchChange} search={userNameSearch} />
                     {count > 0 && (
                         <UserTable
                             users={usersCrop}
